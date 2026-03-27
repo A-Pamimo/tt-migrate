@@ -8,6 +8,7 @@ from server.services.llm.anthropic_provider import AnthropicProvider
 from server.services.llm.base import LLMProvider
 from server.services.llm.cache import get_cached, set_cached
 from server.services.llm.google_provider import GoogleProvider
+from server.services.llm.kimi_provider import KimiProvider
 from server.services.llm.openai_provider import OpenAIProvider
 from server.services.llm.prompts import build_refactor_prompt
 
@@ -18,11 +19,35 @@ class LLMRouter:
     """Routes LLM requests to providers with fallback support."""
 
     def __init__(self) -> None:
-        self._providers: Dict[str, LLMProvider] = {
+        # Only register providers whose API keys are actually set.
+        # This prevents "all providers failed" errors when keys are simply absent.
+        _candidates: Dict[str, LLMProvider] = {
             "anthropic": AnthropicProvider(),
             "openai": OpenAIProvider(),
             "google": GoogleProvider(),
+            "kimi": KimiProvider(),
         }
+        _key_map = {
+            "anthropic": settings.ANTHROPIC_API_KEY,
+            "openai": settings.OPENAI_API_KEY,
+            "google": settings.GOOGLE_API_KEY,
+            "kimi": settings.KIMI_API_KEY,
+        }
+        self._providers: Dict[str, LLMProvider] = {
+            name: provider
+            for name, provider in _candidates.items()
+            if _key_map.get(name)
+        }
+        if not self._providers:
+            logger.warning(
+                "No LLM providers are configured. Set at least one API key in your "
+                ".env file (ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY, or "
+                "KIMI_API_KEY)."
+            )
+        else:
+            logger.info(
+                "Registered LLM providers: %s", ", ".join(self._providers)
+            )
         self._fallback_chain = settings.LLM_FALLBACK_CHAIN
         self._default_provider = settings.LLM_PROVIDER
 

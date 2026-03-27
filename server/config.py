@@ -14,18 +14,20 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # LLM Provider Configuration
-    LLM_PROVIDER: str = "anthropic"  # anthropic | openai | google
-    LLM_FALLBACK_CHAIN: List[str] = ["anthropic", "openai", "google"]
+    LLM_PROVIDER: str = "anthropic"  # anthropic | openai | google | kimi
+    LLM_FALLBACK_CHAIN: List[str] = ["anthropic", "openai", "google", "kimi"]
 
     # API Keys
     ANTHROPIC_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
     GOOGLE_API_KEY: Optional[str] = None
+    KIMI_API_KEY: Optional[str] = None
 
     # Model names
     ANTHROPIC_MODEL: str = "claude-sonnet-4-20250514"
     OPENAI_MODEL: str = "gpt-4"
     GOOGLE_MODEL: str = "gemini-pro"
+    KIMI_MODEL: str = "moonshot-v1-8k"
 
     # Rate Limiting
     RATE_LIMIT_REQUESTS: int = 60

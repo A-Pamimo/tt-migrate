@@ -23,6 +23,8 @@ class AnthropicProvider(LLMProvider):
 
     async def refactor(self, source_code: str, diagnostics: str, prompt: str) -> str:
         """Generate refactored code via Claude."""
+        if not self._api_key:
+            raise ValueError("ANTHROPIC_API_KEY is not configured.")
         import anthropic
 
         client = anthropic.AsyncAnthropic(api_key=self._api_key)
@@ -42,6 +44,8 @@ class AnthropicProvider(LLMProvider):
         self, source_code: str, diagnostics: str, prompt: str
     ) -> AsyncIterator[str]:
         """Stream refactored code chunks via Claude."""
+        if not self._api_key:
+            raise ValueError("ANTHROPIC_API_KEY is not configured.")
         import anthropic
 
         client = anthropic.AsyncAnthropic(api_key=self._api_key)

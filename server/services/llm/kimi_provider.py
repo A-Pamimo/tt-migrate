@@ -1,4 +1,8 @@
-"""OpenAI (GPT-4) LLM provider implementation."""
+"""KIMI (Moonshot AI) LLM provider implementation.
+
+KIMI exposes an OpenAI-compatible chat-completions endpoint, so we reuse the
+``openai`` SDK and simply point it at the Moonshot base URL.
+"""
 
 import logging
 from typing import AsyncIterator
@@ -9,25 +13,35 @@ from server.services.llm.prompts import SYSTEM_PROMPT
 
 logger = logging.getLogger(__name__)
 
+_KIMI_BASE_URL = "https://api.moonshot.cn/v1"
 
-class OpenAIProvider(LLMProvider):
-    """GPT-4-based LLM provider using the OpenAI Python SDK."""
+
+class KimiProvider(LLMProvider):
+    """Moonshot-AI KIMI provider using the OpenAI-compatible SDK."""
 
     def __init__(self) -> None:
-        self._api_key = settings.OPENAI_API_KEY
-        self._model = settings.OPENAI_MODEL
+        self._api_key = settings.KIMI_API_KEY
+        self._model = settings.KIMI_MODEL
 
     @property
     def name(self) -> str:
-        return "openai"
+        return "kimi"
 
-    async def refactor(self, source_code: str, diagnostics: str, prompt: str) -> str:
-        """Generate refactored code via GPT-4."""
-        if not self._api_key:
-            raise ValueError("OPENAI_API_KEY is not configured.")
+    def _get_client(self):  # type: ignore[return]
+        """Return an async OpenAI client pointed at the KIMI endpoint."""
         import openai
 
-        client = openai.AsyncOpenAI(api_key=self._api_key)
+        return openai.AsyncOpenAI(
+            api_key=self._api_key,
+            base_url=_KIMI_BASE_URL,
+        )
+
+    async def refactor(self, source_code: str, diagnostics: str, prompt: str) -> str:
+        """Generate refactored code via KIMI."""
+        if not self._api_key:
+            raise ValueError("KIMI_API_KEY is not configured.")
+
+        client = self._get_client()
         response = await client.chat.completions.create(
             model=self._model,
             messages=[
@@ -42,12 +56,11 @@ class OpenAIProvider(LLMProvider):
     async def refactor_stream(
         self, source_code: str, diagnostics: str, prompt: str
     ) -> AsyncIterator[str]:
-        """Stream refactored code chunks via GPT-4."""
+        """Stream refactored code chunks via KIMI."""
         if not self._api_key:
-            raise ValueError("OPENAI_API_KEY is not configured.")
-        import openai
+            raise ValueError("KIMI_API_KEY is not configured.")
 
-        client = openai.AsyncOpenAI(api_key=self._api_key)
+        client = self._get_client()
         stream = await client.chat.completions.create(
             model=self._model,
             messages=[
@@ -64,15 +77,13 @@ class OpenAIProvider(LLMProvider):
                 yield delta.content
 
     async def health_check(self) -> bool:
-        """Check if the OpenAI provider is configured."""
+        """Check if the KIMI provider is configured and reachable."""
         if not self._api_key:
             return False
         try:
-            import openai
-
-            client = openai.AsyncOpenAI(api_key=self._api_key)
+            client = self._get_client()
             await client.models.list()
             return True
         except Exception:
-            logger.warning("OpenAI health check failed", exc_info=True)
+            logger.warning("KIMI health check failed", exc_info=True)
             return False

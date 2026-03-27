@@ -23,6 +23,8 @@ class GoogleProvider(LLMProvider):
 
     async def refactor(self, source_code: str, diagnostics: str, prompt: str) -> str:
         """Generate refactored code via Gemini."""
+        if not self._api_key:
+            raise ValueError("GOOGLE_API_KEY is not configured.")
         import google.generativeai as genai
 
         genai.configure(api_key=self._api_key)
@@ -37,6 +39,8 @@ class GoogleProvider(LLMProvider):
         self, source_code: str, diagnostics: str, prompt: str
     ) -> AsyncIterator[str]:
         """Stream refactored code chunks via Gemini."""
+        if not self._api_key:
+            raise ValueError("GOOGLE_API_KEY is not configured.")
         import google.generativeai as genai
 
         genai.configure(api_key=self._api_key)
