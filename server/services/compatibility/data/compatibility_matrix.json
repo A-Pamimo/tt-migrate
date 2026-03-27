@@ -1,0 +1,174 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-03-27",
+  "operations": [
+    {
+      "torch_op": "torch.matmul",
+      "category": "Linear Algebra",
+      "ttnn_equivalent": "ttnn.matmul",
+      "status": "supported",
+      "notes": "Full support for 2D and batched matmul"
+    },
+    {
+      "torch_op": "torch.nn.Linear",
+      "category": "Layers",
+      "ttnn_equivalent": "ttnn.linear",
+      "status": "supported",
+      "notes": "Fully supported with weight and bias"
+    },
+    {
+      "torch_op": "torch.nn.Conv2d",
+      "category": "Layers",
+      "ttnn_equivalent": "ttnn.conv2d",
+      "status": "supported",
+      "notes": "Standard convolutions supported; dilated convolutions partial"
+    },
+    {
+      "torch_op": "torch.relu",
+      "category": "Activations",
+      "ttnn_equivalent": "ttnn.relu",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.nn.functional.relu",
+      "category": "Activations",
+      "ttnn_equivalent": "ttnn.relu",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.nn.ReLU",
+      "category": "Activations",
+      "ttnn_equivalent": "ttnn.relu",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.nn.functional.gelu",
+      "category": "Activations",
+      "ttnn_equivalent": "ttnn.gelu",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.nn.GELU",
+      "category": "Activations",
+      "ttnn_equivalent": "ttnn.gelu",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.nn.functional.softmax",
+      "category": "Activations",
+      "ttnn_equivalent": "ttnn.softmax",
+      "status": "supported",
+      "notes": "Supported along last dimension"
+    },
+    {
+      "torch_op": "torch.nn.Softmax",
+      "category": "Activations",
+      "ttnn_equivalent": "ttnn.softmax",
+      "status": "supported",
+      "notes": "Supported along last dimension"
+    },
+    {
+      "torch_op": "torch.nn.functional.sigmoid",
+      "category": "Activations",
+      "ttnn_equivalent": "ttnn.sigmoid",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.add",
+      "category": "Elementwise",
+      "ttnn_equivalent": "ttnn.add",
+      "status": "supported",
+      "notes": "Fully supported with broadcasting"
+    },
+    {
+      "torch_op": "torch.mul",
+      "category": "Elementwise",
+      "ttnn_equivalent": "ttnn.mul",
+      "status": "supported",
+      "notes": "Fully supported with broadcasting"
+    },
+    {
+      "torch_op": "torch.nn.LayerNorm",
+      "category": "Normalization",
+      "ttnn_equivalent": "ttnn.layer_norm",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.nn.BatchNorm2d",
+      "category": "Normalization",
+      "ttnn_equivalent": "ttnn.batch_norm",
+      "status": "partial",
+      "notes": "Inference mode only; training mode not yet supported"
+    },
+    {
+      "torch_op": "torch.nn.MaxPool2d",
+      "category": "Pooling",
+      "ttnn_equivalent": "ttnn.max_pool2d",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.nn.functional.max_pool2d",
+      "category": "Pooling",
+      "ttnn_equivalent": "ttnn.max_pool2d",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.nn.AdaptiveAvgPool2d",
+      "category": "Pooling",
+      "ttnn_equivalent": "ttnn.global_avg_pool2d",
+      "status": "partial",
+      "notes": "Only global pooling (output_size=1) supported"
+    },
+    {
+      "torch_op": "torch.reshape",
+      "category": "Data Movement",
+      "ttnn_equivalent": "ttnn.reshape",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.transpose",
+      "category": "Data Movement",
+      "ttnn_equivalent": "ttnn.transpose",
+      "status": "supported",
+      "notes": "Fully supported for 2D transpose"
+    },
+    {
+      "torch_op": "torch.nn.Embedding",
+      "category": "Layers",
+      "ttnn_equivalent": "ttnn.embedding",
+      "status": "supported",
+      "notes": "Fully supported"
+    },
+    {
+      "torch_op": "torch.nn.Dropout",
+      "category": "Regularization",
+      "ttnn_equivalent": null,
+      "status": "unsupported",
+      "notes": "Not applicable for inference on Tenstorrent hardware"
+    },
+    {
+      "torch_op": "torch.nn.functional.dropout",
+      "category": "Regularization",
+      "ttnn_equivalent": null,
+      "status": "unsupported",
+      "notes": "Not applicable for inference on Tenstorrent hardware"
+    },
+    {
+      "torch_op": "torch.nn.MultiheadAttention",
+      "category": "Layers",
+      "ttnn_equivalent": "ttnn.transformer.attention",
+      "status": "partial",
+      "notes": "Supported via decomposition into individual ops; native fused attention in development"
+    }
+  ]
+}
