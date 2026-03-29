@@ -1,4 +1,3 @@
-version: "3.9"
 
 services:
   backend:
@@ -14,10 +13,11 @@ services:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
       - CORS_ORIGINS=http://localhost:3000
       - REDIS_URL=redis://redis:6379/0
+      - PYTHONPATH=/workspace
     volumes:
-      - ./server:/app
-      - upload_data:/app/uploads
-      - export_data:/app/exports
+      - ./server:/workspace/server
+      - upload_data:/workspace/server/uploads
+      - export_data:/workspace/server/exports
     depends_on:
       - redis
     restart: unless-stopped
